@@ -5,25 +5,25 @@
 #  into two subsets that add up to the same sum.
 #
 # Strategy:
-# - Generate all possible combinations of 2 subsets
-#  - generate the combinations
+# - Generate all possible permutations of 2 subsets
+#  - generate the permutations
 #  - run the breakpoint from {1|N-1} to {N-1|1}
 # - Compare the sums of the subsets
 # - If the sums are equal, return True
 # - If loop ends, return False
 #
 # Optimizations:
-# - rather than compare the sums of the split combination each time, add and subtract from a pair of
+# - rather than compare the sums of the split permutation each time, add and subtract from a pair of
 #  sums as the divider is moved.
 # - We can stop on the first match, so try and find a match earlier:
-#  - start at the middle (do this for all combinations as a way to hit the solution faster,
+#  - start at the middle (do this for all permutations as a way to hit the solution faster,
 #    assuming a normal distribution)
 #    - assume a normal distribution with low probability of outliers
 #    - start the divider at the middle of the list
 #    - move the divider first one way, then the other
 #  - sort and guess (not exhaustive, but might be faster depending on the distribution):
 #    - sort the original list
-#    - assume a normal distribution, and start the divider at N/sqrt(N) from the left index
+#    - assume a normal distribution, and start the divider at sqrt(N)/N from the left index
 #    - move the divider one way. If the sums get closer, keep moving that way.
 #      If they get further apart, move the other way. Stop when the sums are equal, the difference has
 #      decreased and then increased, or the divider reaches the end of the list.
@@ -36,18 +36,19 @@ import random
 def list_has_equal_sums(numbers: list[int]) -> bool:
     n: int = len(numbers)
     perms = permutations(numbers, n)
-    print(f'perms: {perms}')
-    print(f'number of permutations = n! / (n-r)! = n! = {fact(n)}')
+    # print(f'perms: {perms}')
+    # print(f'number of permutations = n! / (n-r)! = n! = {fact(n)}')
     for perm in perms:
         print(f'\n--- trying perm: {perm}')
+        print(f'type(perm): {type(perm)}')
         if perm_has_equal_sums(perm):
-            print(f'YEP! {perm}')
+            # print(f'YEP! {perm}')
             return True
-    print('nope.')
+    # print('nope.')
     return False
 
 
-def perm_has_equal_sums(perm: list[int]) -> bool:
+def perm_has_equal_sums(perm: tuple[int]) -> bool:
     middle_index: int = len(perm) // 2 + 1
     divider_index: int = middle_index
     initial_left_sum: int = sum(perm[:divider_index])
