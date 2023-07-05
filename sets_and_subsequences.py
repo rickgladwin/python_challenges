@@ -3,6 +3,8 @@
 # given "epidemiologist", "refrigeration", and "supercalifragilisticexpialodocious",
 # it should return 5, since the longest common
 # subsequence is "eieio".
+import collections
+
 from numpy import str_
 
 # Strategy:
@@ -32,44 +34,50 @@ print(f'str_2_reduced: {str_2_reduced}')
 str_3_reduced = [x for x in list(string_3) if x in common_chars]
 print(f'str_3_reduced: {str_3_reduced}')
 
-# TODO: find a recursive function that will explore the tree of sequences
-#  Consider starting from the end of the list (or end - 1) and appending
-#  each remaining element in order to form each new branch.
-#  NOTE: the algorithm will be similar to the one for finding combinations
-#  NOTE: consider adding the resulting formula to the python_tools repo
 
+# TODO: NOTE: consider adding the subsequence generating formula to the python_tools repo
 
-def subsequences(sequence: list) -> list:
-    # handle sequences of length 1
-    if len(sequence) == 1:
-        return [sequence]
-    # handle sequences of length 2
-    result = []
-    for i in range(0, len(sequence)):
-        result.append([sequence[i]])
-    for j in range(0, len(result) - 1):
-        clone = result[j].copy()
-        print(f'\n--- clone: {clone}')
-        print(f'sequence[j + 1]: {sequence[j + 1]}')
-        clone.append(sequence[j + 1])
-        result.append(clone)
-    return result
+# Recursive strategy:
+# - send results to a top-level variable
+# - accumulate the "list so far"
+# - branch at each node, reducing the remaining index each time
 
-    # get subsequences of length 1, store them
-    # for x in sequence:
-    #     result.append(x)
-    # get subsequences of length 2, concat with stored, store them
+class Subsequence:
+    subsequences = []
+    sequence = []
 
-    # ...
-    # get subsequences of length len(sequence), concat with stored, store them
-    # return all stored
+    def __init__(self, sequence: list):
+        self.sequence = sequence
 
+    def find_subsequences(self) -> list:
+        for i in range(0, len(self.sequence)):
+            self.build_subsequence(seed_sequence=[], index=i)
+        return self.subsequences
 
+    def build_subsequence(self, seed_sequence: list, index: int) -> None:
+        # to seed_sequence, append sequence[index + 1], send to result
+        new_seed = seed_sequence.copy()
+        new_seed.append(self.sequence[index])
+        self.subsequences.append(new_seed)
+        if index < len(self.sequence):
+            for j in range(index + 1, len(self.sequence)):
+                self.build_subsequence(new_seed, j)
+        return
 
 
 if __name__ == '__main__':
-    test_sequence = ['a', 'b']
-    expected_result = [['a'], ['b'], ['a', 'b']]
-    result = subsequences(test_sequence)
+    # test_sequence = ['a', 'b']
+    # expected_result = [['a'], ['b'], ['a', 'b']]
+
+    # test_sequence = ['a', 'b', 'c']
+    # expected_result = [['a'], ['b'], ['c'], ['a', 'b'], ['a', 'c'], ['b', 'c'], ['a', 'b', 'c']]
+
+    test_sequence = ['a', 'b', 'c', 'd']
+    expected_result = [['a'], ['a', 'b'], ['a', 'b', 'c'], ['a', 'b', 'c', 'd'],
+                       ['a', 'b', 'd'], ['a', 'c'], ['a', 'c', 'd'], ['a', 'd'], ['b'],
+                       ['b', 'c'], ['b', 'c', 'd'], ['b', 'd'], ['c'], ['c', 'd'], ['d']]
+
+    result = Subsequence(test_sequence).find_subsequences()
     print(f'result: {result}')
-    assert result == expected_result
+    # assert collections.Counter(result) == collections.Counter(expected_result)
+    # TODO: create deep compare function for nested lists
