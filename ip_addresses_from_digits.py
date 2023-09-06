@@ -4,15 +4,23 @@
 # Zero-prefixed numbers, such as 01 and 065, are not allowed, except for 0 itself.
 #
 # For example, given "2542540123", you should return ['254.25.40.123', '254.254.0.123']
+import re
+
 
 # strategy:
 # recursive function to build and record "x valid segments from here" where x is the "here + 1" segment
 
 def generate_ip_addresses_from_digits(digits: str) -> list:
-   result: list = []
+    result: list = []
+    #guard minimal digits
+    if len(digits) < 4:
+        return result
+    # guard "numbery" string
+    regex_match = re.match()
+    # TODO: validate only strings that can be converted to integers directly using int()
+    #  That is, no non-digit characters, ignore starting zeroes
 
-
-   return result
+    return result
 
 
 if __name__ == "__main__":

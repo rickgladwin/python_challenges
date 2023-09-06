@@ -1,5 +1,8 @@
 from sets_and_subsequences import Subsequence
 
+# TODO: find a way to compare lists with elements (and nested elements) in any order
+#  so that these assertions will be valid
+
 
 class TestSubsequences:
     def test_finds_subsequences_of_sequence_with_length_1(self):
