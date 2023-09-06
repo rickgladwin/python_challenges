@@ -55,7 +55,6 @@ class Subsequence:
         return self.subsequences
 
     def build_subsequence(self, seed_sequence: list, index: int) -> None:
-        # to seed_sequence, append sequence[index + 1], send to result
         new_seed = seed_sequence.copy()
         new_seed.append(self.sequence[index])
         self.subsequences.append(new_seed)
@@ -72,11 +71,20 @@ if __name__ == '__main__':
     # test_sequence = ['a', 'b', 'c']
     # expected_result = [['a'], ['b'], ['c'], ['a', 'b'], ['a', 'c'], ['b', 'c'], ['a', 'b', 'c']]
 
-    test_sequence = ['a', 'b', 'c', 'd']
-    expected_result = [['a'], ['a', 'b'], ['a', 'b', 'c'], ['a', 'b', 'c', 'd'],
-                       ['a', 'b', 'd'], ['a', 'c'], ['a', 'c', 'd'], ['a', 'd'], ['b'],
-                       ['b', 'c'], ['b', 'c', 'd'], ['b', 'd'], ['c'], ['c', 'd'], ['d']]
+    # test_sequence = ['a', 'b', 'c', 'd']
+    # expected_result = [['a'], ['a', 'b'], ['a', 'b', 'c'], ['a', 'b', 'c', 'd'],
+    #                    ['a', 'b', 'd'], ['a', 'c'], ['a', 'c', 'd'], ['a', 'd'], ['b'],
+    #                    ['b', 'c'], ['b', 'c', 'd'], ['b', 'd'], ['c'], ['c', 'd'], ['d']]
 
+    test_sequence = ['a', 'b', 'c', 'd', 'e']
+    expected_result = [['a'], ['a', 'b'], ['a', 'b', 'c'], ['a', 'b', 'c', 'd'], ['a', 'b', 'c', 'd', 'e'],
+                       ['a', 'b', 'c', 'e'], ['a', 'b', 'd'], ['a', 'b', 'd', 'e'], ['a', 'b', 'e'],
+                       ['a', 'c'], ['a', 'c', 'd'], ['a', 'c', 'd', 'e'], ['a', 'c', 'e'], ['a', 'd'],
+                       ['a', 'd', 'e'], ['a', 'e'], ['b'], ['b', 'c'], ['b', 'c', 'd'], ['b', 'c', 'd', 'e'],
+                       ['b', 'c', 'e'], ['b', 'd'], ['b', 'd', 'e'], ['b', 'e'], ['c'], ['c', 'd'],
+                       ['c', 'd', 'e'], ['c', 'e'], ['d'], ['d', 'e'], ['e']]
+
+    print(f'test_sequence: {test_sequence}')
     result = Subsequence(test_sequence).find_subsequences()
     print(f'result: {result}')
     # assert collections.Counter(result) == collections.Counter(expected_result)
