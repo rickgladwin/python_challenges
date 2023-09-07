@@ -10,15 +10,18 @@ import re
 # strategy:
 # recursive function to build and record "x valid segments from here" where x is the "here + 1" segment
 
-def generate_ip_addresses_from_digits(digits: str) -> list:
+def generate_ip_addresses_from_digits(digits: str) -> list | Exception:
     result: list = []
     #guard minimal digits
     if len(digits) < 4:
         return result
     # guard "numbery" string
-    regex_match = re.match()
     # TODO: validate only strings that can be converted to integers directly using int()
     #  That is, no non-digit characters, ignore starting zeroes
+    try:
+        int_digits = int(digits)
+    except ValueError:
+        raise Exception('input must be a string of digits only')
 
     return result
 
