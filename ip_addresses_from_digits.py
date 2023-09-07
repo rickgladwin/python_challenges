@@ -4,25 +4,62 @@
 # Zero-prefixed numbers, such as 01 and 065, are not allowed, except for 0 itself.
 #
 # For example, given "2542540123", you should return ['254.25.40.123', '254.254.0.123']
-import re
 
 
 # strategy:
 # recursive function to build and record "x valid segments from here" where x is the "here + 1" segment
+# optimizations:
+# - the possible combinations of digits in the address segments will depend on the
+#   total length of the input string. Calculate these segment lengths in advance,
+#   and only look to fill those segments. For example, '1234' is valid, but don't let
+#   the function use '123' as a first segment.
 
-def generate_ip_addresses_from_digits(digits: str) -> list | Exception:
+def generate_ip_addresses_from_digits(digits: str) -> list:
     result: list = []
-    #guard minimal digits
+    # guard minimum digit count
     if len(digits) < 4:
+        print(f'input length too short ({len(digits)}')
         return result
-    # guard "numbery" string
-    # TODO: validate only strings that can be converted to integers directly using int()
-    #  That is, no non-digit characters, ignore starting zeroes
+    # guard non-integer input
     try:
         int_digits = int(digits)
     except ValueError:
         raise Exception('input must be a string of digits only')
 
+    digits_iter = [x for x in digits]
+
+    # recursive function
+    def append_segments(remaining_digits: list[str] = digits_iter, current_segments: list[str] = [], remaining_depth: int = 4):
+        nonlocal result
+        # print(f'{remaining_digits=}')
+        if remaining_depth == 0 and len(current_segments) == 4:
+            print(f'new IP address: {current_segments}')
+            result.append(current_segments)
+            return None
+
+        # to the current segments, append the next 1, 2, and 3 digits
+        for i in range(1, 4):
+            if len(remaining_digits) >= i:
+                print(f'{remaining_digits=}')
+                print(f'{i=}')
+                cloned_segments = current_segments.copy()
+                # TODO: exit for loop if first digit in segment is 0
+                # split the remaining digits after i
+                # FIXME: figure out the syntax for taking the first i elements
+                pre_pre_chunk = remaining_digits[:(i - 1)]
+                print(f'{pre_pre_chunk=}')
+                pre_chunk = ''.join(remaining_digits[:i - 1])
+                print(f'{pre_chunk=}')
+                post_chunk = remaining_digits[i:]
+                print(f'{post_chunk=}')
+                # append the chunk before the split to the current segments
+                print(f'appending pre_chunk: {pre_chunk}')
+                cloned_segments.append(pre_chunk)
+                # run the recursive function with the chunk after the split
+                append_segments(post_chunk, cloned_segments, remaining_depth - 1)
+            return None
+    # initial recursive call
+    append_segments()
     return result
 
 
@@ -30,6 +67,6 @@ if __name__ == "__main__":
     test_digits = "1234"
     expected_result = ['1.2.3.4']
 
-    test_result = ip_addresses(test_digits)
+    test_result = generate_ip_addresses_from_digits(test_digits)
     print(f'{test_result=}')
     assert(test_result == expected_result)
