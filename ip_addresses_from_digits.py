@@ -29,11 +29,12 @@ def generate_ip_addresses_from_digits(digits: str) -> list:
     digits_iter = [x for x in digits]
 
     # recursive function
-    def append_segments(remaining_digits: list[str] = digits_iter, current_segments: list[str] = [], remaining_depth: int = 4):
+    def append_segments(remaining_digits: list[str] = digits_iter, current_segments: list[str] = [],
+                        remaining_depth: int = 4):
         nonlocal result
         # print(f'{remaining_digits=}')
         if remaining_depth == 0 and len(current_segments) == 4:
-            print(f'new IP address: {current_segments}')
+            print(f'-- new IP address: {current_segments}')
             result.append(current_segments)
             return None
 
@@ -43,12 +44,11 @@ def generate_ip_addresses_from_digits(digits: str) -> list:
                 print(f'{remaining_digits=}')
                 print(f'{i=}')
                 cloned_segments = current_segments.copy()
-                # TODO: exit for loop if first digit in segment is 0
+                # TODO: exit for loop if first digit in segment is 0 AND segment length is > 1
                 # split the remaining digits after i
-                # FIXME: figure out the syntax for taking the first i elements
-                pre_pre_chunk = remaining_digits[:(i - 1)]
+                pre_pre_chunk = remaining_digits[:i]
                 print(f'{pre_pre_chunk=}')
-                pre_chunk = ''.join(remaining_digits[:i - 1])
+                pre_chunk = ''.join(remaining_digits[:i])
                 print(f'{pre_chunk=}')
                 post_chunk = remaining_digits[i:]
                 print(f'{post_chunk=}')
@@ -58,9 +58,37 @@ def generate_ip_addresses_from_digits(digits: str) -> list:
                 # run the recursive function with the chunk after the split
                 append_segments(post_chunk, cloned_segments, remaining_depth - 1)
             return None
+
     # initial recursive call
     append_segments()
+
+    # format result
+    result = multiple_lists_to_ip_addresses(result)
+
     return result
+
+
+def list_to_ip_address(segments: list) -> str:
+    ip_address = ''
+    # validate length
+    if len(segments) != 4:
+        raise Exception('input parameter must have length 4')
+
+    for i in range(0, 4):
+        print(f'{i=}')
+        ip_address = ip_address + segments[i] + '.'
+    ip_address = ip_address[:-1]
+
+    return ip_address
+
+
+def multiple_lists_to_ip_addresses(segments_list: list[list]) -> list[str]:
+    ip_addresses = []
+    for segments in segments_list:
+        print(f'{segments=}')
+        ip_addresses.append(list_to_ip_address(segments))
+
+    return ip_addresses
 
 
 if __name__ == "__main__":
@@ -69,4 +97,4 @@ if __name__ == "__main__":
 
     test_result = generate_ip_addresses_from_digits(test_digits)
     print(f'{test_result=}')
-    assert(test_result == expected_result)
+    assert (test_result == expected_result)
